@@ -16,11 +16,6 @@
             },
             options: { 
                 enableMenu: false 
-            },
-            startup: {
-                pageReady: () => {
-                    return MathJax.startup.defaultPageReady();
-                }
             }
         };
     </script>
@@ -109,12 +104,12 @@
         (function() { emailjs.init("YprKOWjuKoWJYmpsn"); })(); 
 
         const QUESTIONS = [
-            // --- 1-р хэсэг: Эерэг, сөрөг тооны үйлдлүүд (Суурь) ---
+            // --- 1-р хэсэг: Эерэг, сөрөг тооны үйлдлүүд ---
             { 
                 q: "\\( -8 + 15 \\) илэрхийллийн утгыг ол.", 
                 a: ["-23", "-7", "7", "23"], 
                 c: 2, 
-                e: "<b>Дүрэм:</b> Эсрэг тэмдэгтэй тоонуудыг нэмэхдээ их тооноос нь бага тоог хасаад, их тооныхоо тэмдгийг авна.<br><b>Бодолт:</b> 15 нь 8-аас их тул $15 - 8 = 7$. Их тоо буюу 15 нь эерэг (+) тэмдэгтэй тул хариу нь <b>+7</b> болно." 
+                e: "<b>Дүрэм:</b> Эсрэг тэмдэгтэй тоонуудыг нэмэхдээ их тооноос нь бага тоог хасаад, их тооныхоо тэмдгийг авна.<br><b>Бодолт:</b> $15 - 8 = 7$. Их тоо буюу 15 нь эерэг (+) тул хариу нь <b>7</b> болно." 
             },
             { 
                 q: "\\( -5 - 9 \\) утгыг ол.", 
@@ -126,7 +121,7 @@
                 q: "\\((-4) \\cdot (-7) \\) үржвэрийг ол.", 
                 a: ["-28", "28", "-11", "11"], 
                 c: 1, 
-                e: "<b>Дүрэм:</b> Хоёр сөрөг тоог үржүүлэх эсвэл хуваахад хасах тэмдгүүд бие биенээ саармагжуулж <b>эерэг (+)</b> тоо гарна.<br><b>Бодолт:</b> $(-) \\cdot (-) = (+)$ тул $4 \\cdot 7 = 28$ болно." 
+                e: "<b>Дүрэм:</b> Хоёр сөрөг тоог үржүүлэхэд хасах тэмдгүүд бие биенээ саармагжуулж <b>эерэг (+)</b> тоо гарна.<br><b>Бодолт:</b> $(-) \\cdot (-) = (+)$ тул $4 \\cdot 7 = 28$ болно." 
             },
             { 
                 q: "\\(-18 : 3 + (-2) \\) үйлдлийг гүйцэтгэ.", 
@@ -135,56 +130,56 @@
                 e: "<b>Үйдлийн дараалал:</b> Эхлээд хуваах, дараа нь нэмэх үйлдэл хийнэ.<br>1) $-18 : 3 = -6$<br>2) $-6 + (-2) = -8$." 
             },
 
-            // --- 2-р хэсэг: Энгийн ба аравтын бутархай (Суурь) ---
+            // --- 2-р хэсэг: Энгийн ба аравтын бутархай ---
             { 
                 q: "\\(\\frac{2}{5} + \\frac{1}{3} \\) нийлбэрийг ол.", 
-                a: ["\\(\\frac{3}{8} \\)", "\\(\\frac{11}{15} \\)", "\\(\\frac{2}{15} \\)", "\\(\\frac{7}{15} \\)"], 
+                a: ["\\(\\frac{3}{8}\\)", "\\(\\frac{11}{15}\\)", "\\(\\frac{2}{15}\\)", "\\(\\frac{7}{15}\\)"], 
                 c: 1, 
-                e: "<b>Дүрэм:</b> Энгийн бутархайг нэмэхийн тулд заавал ерөнхий хуваарьтай болгоно (5 ба 3-ын БЕХ нь 15).<br><b>Бодолт:</b> \\(\\frac{2 \\cdot 3}{15} + \\frac{1 \\cdot 5}{15} = \\frac{6 + 5}{15} = \\frac{11}{15} \\) болно." 
+                e: "<b>Дүрэм:</b> Бутархайг нэмэхдээ ерөнхий хуваарьтай болгоно (5 ба 3-ын БЕХ нь 15).<br><b>Бодолт:</b> \\(\\frac{6}{15} + \\frac{5}{15} = \\frac{11}{15}\\) болно." 
             },
             { 
                 q: "\\(\\frac{3}{4} - \\frac{5}{6} \\) ялгаврыг ол.", 
-                a: ["\\(-\\frac{1}{12} \\)", "\\(\\frac{1}{12} \\)", "\\(-\\frac{2}{2} \\)", "\\(\\frac{1}{2} \\)"], 
+                a: ["\\(-\\frac{1}{12}\\)", "\\(\\frac{1}{12}\\)", "\\(-\\frac{2}{2}\\)", "\\(\\frac{1}{2}\\)"], 
                 c: 0, 
-                e: "<b>Бодолт:</b> 4 ба 6-ын ерөнхий хуваарь нь 12 юм.<br>\\(\\frac{9}{12} - \\frac{10}{12} = \\frac{9 - 10}{12} = -\\frac{1}{12} \\) болно." 
+                e: "<b>Бодолт:</b> Ерөнхий хуваарь 12.<br>\\(\\frac{9}{12} - \\frac{10}{12} = -\\frac{1}{12}\\) болно." 
             },
             { 
                 q: "\\(\\left(-\\frac{2}{3}\\right) \\cdot \\frac{9}{10} \\) үржвэрийг хялбарчил.", 
-                a: ["\\(-\\frac{3}{5} \\)", "\\(\\frac{3}{5} \\)", "\\(-\\frac{18}{30} \\)", "\\(-\\frac{5}{3} \\)"], 
+                a: ["\\(-\\frac{3}{5}\\)", "\\(\\frac{3}{5}\\)", "\\(-\\frac{18}{30}\\)", "\\(-\\frac{5}{3}\\)"], 
                 c: 0, 
-                e: "<b>Дүрэм:</b> Бутархайг үржүүлэхдээ хүртвэрийг хүртвэрээр, хуваарийг хуваариар үржүүлж хураана.<br><b>Бодолт:</b> $-( \\frac{2 \\cdot 9}{3 \\cdot 10} ) = -\\frac{1 \\cdot 3}{1 \\cdot 5} = -\\frac{3}{5}$." 
+                e: "<b>Бодолт:</b> \\(-\\frac{2 \\cdot 9}{3 \\cdot 10} = -\\frac{18}{30} = -\\frac{3}{5}\\) болж хураагдана." 
             },
 
             // --- 3-р хэсэг: Зэргийн чанар ба Сөрөг зэрэг ---
             { 
                 q: "\\( a^m \\cdot a^n \\) илэрхийллийг хялбарчил.", 
-                a: ["\\(a^{m+n} \\)", "\\(a^{m-n} \\)", "\\(a^{m \\cdot n} \\)", "\\( a^m + a^n \\)"], 
+                a: ["\\(a^{m+n}\\)", "\\(a^{m-n}\\)", "\\(a^{m \\cdot n}\\)", "\\( a^m + a^n \\)"], 
                 c: 0, 
-                e: "<b>Зэргийн чанар:</b> Ижил суурьтай зэргүүдийг үржүүлэхэд <b>зэрэг дэвшүүлэгчдийг нэмнэ</b>." 
+                e: "<b>Зэргийн чанар:</b> Ижил суурьтай зэргүүдийг үржүүлэхэд зэрэг дэвшүүлэгчдийг нэмнэ." 
             },
             { 
                 q: "\\( (2x^2)^3 \\) илэрхийллийг зэрэгт дэвшүүл.", 
                 a: ["\\( 6x^6 \\)", "\\( 8x^5 \\)", "\\( 8x^6 \\)", "\\( 2x^6 \\)"], 
                 c: 2, 
-                e: "<b>Дүрэм:</b> Үржигдэхүүн бүрийг зэрэгт дэвшүүлнэ ($(a \\cdot b)^n = a^n \\cdot b^n$) ба зэргийг зэрэгт дэвшүүлэхэд зэргүүдийг үржүүлнэ ($(x^m)^n = x^{m \\cdot n}$).<br><b>Бодолт:</b> $2^3 \\cdot (x^2)^3 = 8 \\cdot x^{2 \\cdot 3} = 8x^6$." 
+                e: "<b>Бодолт:</b> $2^3 \\cdot (x^2)^3 = 8 \\cdot x^{2 \\cdot 3} = 8x^6$." 
             },
             { 
                 q: "\\(3^{-2} \\) утгыг ол.", 
                 a: ["-9", "9", "1/6", "1/9"], 
                 c: 3, 
-                e: "<b>Дүрэм:</b> Сөрөг зэрэг нь тухайн тооны урвуу утгыг заана: \\(a^{-n} = \\frac{1}{a^n} \\).<br><b>Бодолт:</b> \\(3^{-2} = \\frac{1}{3^2} = \\frac{1}{9} \\)." 
+                e: "<b>Дүрэм:</b> $a^{-n} = \\frac{1}{a^n}$<br><b>Бодолт:</b> $3^{-2} = \\frac{1}{3^2} = \\frac{1}{9}$." 
             },
             { 
                 q: "\\(\\left(\\frac{1}{2}\\right)^{-3} \\) утгыг ол.", 
                 a: ["1/8", "-8", "8", "1/6"], 
                 c: 2, 
-                e: "<b>Дүрэм:</b> Бутархайн сөрөг зэргийг эерэг болгохын тулд байрыг нь солино: \\( \\left(\\frac{a}{b}\\right)^{-n} = \\left(\\frac{b}{a}\\right)^n \\).<br><b>Бодолт:</b> \\( \\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^3 = 2^3 = 8 \\)." 
+                e: "<b>Бодолт:</b> \\( \\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^3 = 2^3 = 8 \\)." 
             },
             { 
                 q: "\\(10^4 \\cdot 10^{-2} \\) илэрхийллийн утга хэд вэ?", 
                 a: ["100", "1000", "10", "0.01"], 
                 c: 0, 
-                e: "<b>Бодолт:</b> \\( 10^{4 + (-2)} = 10^{4 - 2} = 10^2 = 100 \\)." 
+                e: "<b>Бодолт:</b> $10^{4 + (-2)} = 10^2 = 100$." 
             },
 
             // --- 4-р хэсэг: Алгебрын илэрхийлэл ба Олон гишүүнт ---
@@ -192,22 +187,214 @@
                 q: "\\( 3a - 7a + 2a \\) илэрхийллийг хялбарчил.", 
                 a: ["\\( 2a \\)", "\\( -2a \\)", "\\( -12a \\)", "\\( 12a \\)"], 
                 c: 1, 
-                e: "<b>Дүрэм:</b> Ижил төстэй гишүүдийн коэффициентүүдийг бодож, үсгийг хэвээр үлдээнэ.<br><b>Бодолт:</b> \\( (3 - 7 + 2)a = (-4 + 2)a = -2a \\)." 
+                e: "<b>Бодолт:</b> $(3 - 7 + 2)a = -2a$." 
             },
             { 
                 q: "\\(2(x - 3) - 4(x + 1) \\) хаалтыг задарч хялбарчил.", 
                 a: ["\\( -2x - 10 \\)", "\\( -2x - 2 \\)", "\\( 2x - 10 \\)", "\\( -2x + 2 \\)"], 
                 c: 0, 
-                e: "<b>Алхамчилсан бодолт:</b><br>1) Хаалт гишүүнчлэн үржүүлж задна: \\( 2x - 6 - 4x - 4 \\)<br>2) Ижил төстэй гишүүдийг эмхэтгэвэл: \\( (2x - 4x) + (-6 - 4) = -2x - 10 \\)." 
+                e: "<b>Бодолт:</b> $2x - 6 - 4x - 4 = -2x - 10$." 
             },
             { 
                 q: "\\( (x+y)^2 \\) богино үржүүлэхийн томьёоны задаргааг ол.", 
                 a: ["\\( x^2 + y^2 \\)", "\\( x^2 + xy + y^2 \\)", "\\( x^2 + 2xy + y^2 \\)", "\\( 2x + 2y \\)"], 
                 c: 2, 
-                e: "<b>Нийлбэрийн квадрат:</b> \\( (a+b)^2 = a^2 + 2ab + b^2 \\)<br>Дундын \\( 2xy \\) гишүүнийг орхигдуулж болохгүй." 
+                e: "<b>Нийлбэрийн квадрат:</b> $(a+b)^2 = a^2 + 2ab + b^2$." 
             },
             { 
                 q: "\\( (a-3)^2 \\) илэрхийллийг задар.", 
                 a: ["\\( a^2 - 9 \\)", "\\( a^2 - 6a + 9 \\)", "\\( a^2 + 6a + 9 \\)", "\\( a^2 - 3a + 9 \\)"], 
                 c: 1, 
-                e: "<b>Ялгаврын квадрат:</b> \\( (a-b)^2 = a^2 - 2ab + b^2 \\
+                e: "<b>Ялгаврын квадрат:</b> $(a-b)^2 = a^2 - 2ab + b^2$<br><b>Бодолт:</b> $a^2 - 2(a)(3) + 3^2 = a^2 - 6a + 9$." 
+            },
+            { 
+                q: "\\((x - 5)(x + 5) \\) үржвэрийг хялбарчил.", 
+                a: ["\\( x^2 - 10 \\)", "\\( x^2 - 25 \\)", "\\( x^2 + 25 \\)", "\\( x^2 - 5x + 25 \\)"], 
+                c: 1, 
+                e: "<b>Квадратуудын ялгавар:</b> $(a-b)(a+b) = a^2 - b^2$<br><b>Бодолт:</b> $x^2 - 5^2 = x^2 - 25$." 
+            },
+            { 
+                q: "\\( 4x^2 - 9 \\) илэрхийллийг үржигдэхүүн болгон задар.", 
+                a: ["\\( (2x - 3)^2 \\)", "\\((2x - 3)(2x + 3) \\)", "\\((4x - 9)(4x + 9) \\)", "\\(2x(2x - 9) \\)"], 
+                c: 1, 
+                e: "<b>Бодолт:</b> $(2x)^2 - 3^2 = (2x - 3)(2x + 3)$." 
+            },
+            { 
+                q: "\\( 5x + 10y \\) илэрхийллээс ерөнхий үржигдэхүүнийг хаалтнаас гарга.", 
+                a: ["\\(5(x + 10y) \\)", "\\(5(x + 2y) \\)", "\\(x(5 + 10y) \\)", "\\(10(x + y) \\)"], 
+                c: 1, 
+                e: "<b>Бодолт:</b> 5 ба 10-ын ерөнхий хуваагч нь 5 тул: $5(x + 2y)$." 
+            },
+            { 
+                q: "\\( x^2 + 5x + 6 \\) гурван гишүүтийг үржигдэхүүн болгон задар.", 
+                a: ["\\((x + 1)(x + 6) \\)", "\\((x + 2)(x + 3) \\)", "\\((x - 2)(x - 3) \\)", "\\((x + 5)(x + 1) \\)"], 
+                c: 1, 
+                e: "<b>Бодолт:</b> Үржвэр нь 6, нийлбэр нь 5 байх тоонууд нь 2 ба 3 тул: $(x + 2)(x + 3)$." 
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let studentClass = "";
+        let studentName = "";
+        let userAnswers = [];
+        let timerInterval = null;
+        let timeLeft = 1200; // 20 минут
+
+        // MathJax-ийг дэлгэцэнд дахин уншуулж хөрвүүлэх функц
+        function renderMathInPage() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function startQuiz() {
+            studentClass = document.getElementById('input-class').value.trim();
+            studentName = document.getElementById('input-name').value.trim();
+
+            if (!studentClass || !studentName) {
+                alert("Анги болон нэрээ бүрэн оруулна уу!");
+                return;
+            }
+
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('info-display').innerText = `${studentClass} | ${studentName}`;
+
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            document.getElementById('feedback').classList.add('hidden');
+            let q = QUESTIONS[currentQ];
+            document.getElementById('q-progress').innerText = `Асуулт ${currentQ + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-text').innerHTML = q.q;
+
+            let optHtml = "";
+            q.a.forEach((opt, idx) => {
+                optHtml += `<div class="option-item" onclick="selectAnswer(${idx})" id="opt-${idx}">${opt}</div>`;
+            });
+            document.getElementById('options').innerHTML = optHtml;
+
+            // Скрипт орж ирсний дараа математик томьёог уншуулна
+            renderMathInPage();
+        }
+
+        function selectAnswer(idx) {
+            let q = QUESTIONS[currentQ];
+            let options = document.querySelectorAll('.option-item');
+            options.forEach(el => el.classList.add('disabled'));
+
+            userAnswers.push({
+                question: q.q,
+                selected: q.a[idx],
+                correct: q.a[q.c],
+                isCorrect: idx === q.c,
+                explanation: q.e
+            });
+
+            if (idx === q.c) {
+                document.getElementById(`opt-${idx}`).classList.add('correct');
+                score++;
+            } else {
+                document.getElementById(`opt-${idx}`).classList.add('wrong');
+                document.getElementById(`opt-${q.c}`).classList.add('correct');
+            }
+
+            document.getElementById('expl-text').innerHTML = q.e;
+            document.getElementById('feedback').classList.remove('hidden');
+
+            renderMathInPage();
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < QUESTIONS.length) {
+                loadQuestion();
+            } else {
+                clearInterval(timerInterval);
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            let pct = Math.round((score / QUESTIONS.length) * 100);
+            document.getElementById('res-percent').innerText = `${pct}%`;
+            document.getElementById('result-meta').innerText = `${studentClass} ${studentName} - Оноо: ${score}/${QUESTIONS.length}`;
+        }
+
+        function sendFinalEmail() {
+            let btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.innerText = "Илгээж байна...";
+
+            let pct = Math.round((score / QUESTIONS.length) * 100);
+
+            let templateParams = {
+                student_class: studentClass,
+                student_name: studentName,
+                score_text: `${score} / ${QUESTIONS.length} (${pct}%)`
+            };
+
+            emailjs.send('service_default', 'template_default', templateParams)
+                .then(function() {
+                    document.getElementById('action-section').classList.add('hidden');
+                    document.getElementById('email-status').classList.remove('hidden');
+                    showReview();
+                }, function(error) {
+                    alert("Илгээхэд алдаа гарлаа. Дахин оролдоно уу.");
+                    btn.disabled = false;
+                    btn.innerText = "БАГШ РУУ ИЛГЭЭХ";
+                });
+        }
+
+        function showReview() {
+            document.getElementById('post-submission-review').classList.remove('hidden');
+            let reviewHtml = "";
+
+            userAnswers.forEach((item, index) => {
+                let statusColor = item.isCorrect ? "text-emerald-600 bg-emerald-50 border-emerald-200" : "text-rose-600 bg-rose-50 border-rose-200";
+                let statusText = item.isCorrect ? "ЗӨВ ✅" : "БУРУУ ❌";
+
+                reviewHtml += `
+                    <div class="p-4 border rounded-xl space-y-2 bg-white">
+                        <div class="flex justify-between items-center text-xs font-bold">
+                            <span class="text-slate-400">Асуулт ${index + 1}</span>
+                            <span class="px-2.5 py-1 rounded-full border ${statusColor}">${statusText}</span>
+                        </div>
+                        <div class="font-medium text-slate-800 text-sm">${item.question}</div>
+                        <div class="text-xs text-slate-500">
+                            <b>Таны хариулт:</b> ${item.selected}<br>
+                            <b>Зөв хариулт:</b> ${item.correct}
+                        </div>
+                        <div class="text-xs bg-slate-50 p-2.5 rounded-lg text-slate-600 border border-slate-100">
+                            ${item.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('review-list').innerHTML = reviewHtml;
+            renderMathInPage();
+        }
+    </script>
+</body>
+</html>
