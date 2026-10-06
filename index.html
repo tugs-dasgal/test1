@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математикийн Сорил - Олон гишүүнт ба Суурь чадвар</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Таны Public Key
+        (function() { emailjs.init("YprKOWjuKoWJYmpsn"); })(); 
+        
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['\\(', '\\)'], ['$' , '$']], 
+                displayMath: [['\\[', '\\]'], ['$$' , '$$']],
+            },
+            options: { enableMenu: false }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+        .glass-card { background: #ffffff; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .option-item { border: 1.5px solid #e2e8f0; cursor: pointer; transition: all 0.2s ease; border-radius: 1rem; padding: 1rem; font-weight: 500; }
+        .option-item:hover:not(.disabled) { border-color: #6366f1; background-color: #f8faff; }
+        .correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; color: #166534; }
+        .wrong { border-color: #f43f5e !important; background-color: #fef2f2 !important; color: #991b1b; }
+        .disabled { cursor: default; pointer-events: none; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-lg">
+        <!-- Нэвтрэх хэсэг -->
+        <div id="auth-screen" class="glass-card p-10 text-center">
+            <h1 class="text-2xl font-bold mb-2">Математикийн Сорил</h1>
+            <p class="text-slate-400 mb-8 text-sm italic">Бүлэг: Олон гишүүнт, Зэрэг ба Суурь чадвар</p>
+            <div class="space-y-4 text-left">
+                <input type="text" id="input-class" placeholder="Анги (Жишээ: 10а)" class="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-indigo-500">
+                <input type="text" id="input-name" placeholder="Сурагчийн нэр" class="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-indigo-500">
+                <button onclick="startQuiz()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg transition-colors">СОРИЛЫГ ЭХЛҮҮЛЭХ</button>
+            </div>
+        </div>
+
+        <!-- Асуултын хэсэг -->
+        <div id="quiz-screen" class="hidden space-y-4">
+            <div class="flex justify-between items-center px-4">
+                <span id="info-display" class="text-sm font-semibold text-slate-500"></span>
+                <span id="timer-display" class="text-sm font-bold text-rose-500 bg-rose-50 px-3 py-1 rounded-full">20:00</span>
+            </div>
+            <div class="glass-card p-8 min-h-[450px] flex flex-col justify-between">
+                <div>
+                    <div id="q-progress" class="text-[10px] font-bold text-indigo-500 mb-2 uppercase tracking-widest"></div>
+                    <div id="q-text" class="text-lg font-semibold text-slate-800 mb-6 leading-relaxed"></div>
+                    <div id="options" class="grid gap-3"></div>
+                </div>
+                
+                <div id="feedback" class="mt-6 hidden border-t pt-4">
+                    <div class="p-3 bg-indigo-50 rounded-xl mb-4 text-xs text-slate-600 leading-relaxed" id="expl-text"></div>
+                    <button onclick="nextQuestion()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold uppercase hover:bg-slate-800 transition-colors">Үргэлжлүүлэх</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Үр дүнгийн хэсэг -->
+        <div id="result-screen" class="hidden glass-card p-10 text-center">
+            <h2 class="text-2xl font-bold mb-6">Сорилын дүн</h2>
+            <div class="text-5xl font-black text-indigo-600 mb-2" id="res-percent">0%</div>
+            <div id="result-meta" class="text-slate-500 mb-8 text-sm"></div>
+            
+            <div id="action-section" class="space-y-3">
+                <p class="text-xs text-rose-500 font-medium mb-2 italic">* Үр дүнгээ багш руу илгээсний дараа тайлбар харах боломжтой болно.</p>
+                <button onclick="sendFinalEmail()" id="send-btn" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-colors">БАГШ РУУ ИЛГЭЭХ</button>
+            </div>
+
+            <div id="email-status" class="hidden py-4 px-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold mb-4 animate-pulse">
+                АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ! ✅
+            </div>
+
+            <!-- Зөвхөн илгээсний дараа гарч ирэх хэсэг -->
+            <div id="post-submission-review" class="hidden mt-8 text-left border-t pt-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-indigo-500 rounded-full"></span> 
+                    Гүйцэтгэлийн дэлгэрэнгүй
+                </h3>
+                <div id="review-list" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                
+                <button onclick="location.reload()" class="w-full py-4 mt-6 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-colors">
+                    ДАХИН ЭХЛЭХ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            // --- 1-р хэсэг: Эерэг, сөрөг тооны үйлдлүүд (Суурь) ---
+            { 
+                q: "\\( -8 + 15 \\) илэрхийллийн утгыг ол.", 
+                a: ["-23", "-7", "7", "23"], 
+                c: 2, 
+                e: "<b>Дүрэм:</b> Эсрэг тэмдэгтэй тоонуудыг нэмэхдээ их тооноос нь бага тоог хасаад, их тооныхоо тэмдгийг авна.<br><b>Бодолт:</b> 15 нь 8-аас их тул $15 - 8 = 7$. Их тоо буюу 15 нь эерэг (+) тэмдэгтэй тул хариу нь <b>+7</b> болно." 
+            },
+            { 
+                q: "\\( -5 - 9 \\) утгыг ол.", 
+                a: ["-14", "-4", "4", "14"], 
+                c: 0, 
+                e: "<b>Дүрэм:</b> Ижил сөрөг тэмдэгтэй тоонуудыг нэмэхдээ тоонуудыг нь нэмээд урд нь хасах (-) тэмдэг тавина.<br><b>Бодолт:</b> $-(5 + 9) = -14$ болно." 
+            },
+            { 
+                q: "\\( (-4) \\cdot (-7) \\) үржвэрийг ол.", 
+                a: ["-28", "28", "-11", "11"], 
+                c: 1, 
+                e: "<b>Дүрэм:</b> Хоёр сөрөг тоог үржүүлэх эсвэл хуваахад хасах тэмдгүүд бие биенээ саармагжуулж <b>эерэг (+)</b> тоо гарна.<br><b>Бодолт:</b> $ (-) \\cdot (-) = (+) $ тул $ 4 \\cdot 7 = 28 $ болно." 
+            },
+            { 
+                q: "\\( -18 : 3 + (-2) \\) үйлдлийг гүйцэтгэ.", 
+                a: ["-8", "-4", "4", "8"], 
+                c: 0, 
+                e: "<b>Үйдлийн дараалал:</b> Эхлээд хуваах, дараа нь нэмэх үйлдэл хийнэ.<br>1) $ -18 : 3 = -6 $<br>2) $ -6 + (-2) = -8 $." 
+            },
+
+            // --- 2-р хэсэг: Энгийн ба аравтын бутархай (Суурь) ---
+            { 
+                q: "\\( \\frac{2}{5} + \\frac{1}{3} \\) нийлбэрийг ол.", 
+                a: ["\\( \\frac{3}{8} \\)", "\\( \\frac{11}{15} \\)", "\\( \\frac{2}{15} \\)", "\\( \\frac{7}{15} \\)"], 
+                c: 1, 
+                e: "<b>Дүрэм:</b> Энгийн бутархайг нэмэхийн тулд заавал ерөнхий хуваарьтай болгоно (5 ба 3-ын БЕХ нь 15).<br><b>Бодолт:</b> \\( \\frac{2 \\cdot 3}{15} + \\frac{1 \\cdot 5}{15} = \\frac{6 + 5}{15} = \\frac{11}{15} \\) болно." 
+            },
+            { 
+                q: "\\( \\frac{3}{4} - \\frac{5}{6} \\) ялгаврыг ол.", 
+                a: ["\\( -\\frac{1}{12} \\)", "\\( \\frac{1}{12} \\)", "\\( -\\frac{2}{2} \\)", "\\( \\frac{1}{2} \\)"], 
+                c: 0, 
+                e: "<b>Бодолт:</b> 4 ба 6-ын ерөнхий хуваарь нь 12 юм.<br>\\( \\frac{9}{12} - \\frac{10}{12} = \\frac{9 - 10}{12} = -\\frac{1}{12} \\) болно." 
+            },
+            { 
+                q: "\\( \\left(-\\frac{2}{3}\\right) \\cdot \\frac{9}{10} \\) үржвэрийг хялбарчил.", 
+                a: ["\\( -\\frac{3}{5} \\)", "\\( \\frac{3}{5} \\)", "\\( -\\frac{18}{30} \\)", "\\( -\\frac{5}{3} \\)"], 
+                c: 0, 
+                e: "<b>Дүрэм:</b> Бутархайг үржүүлэхдээ хүртвэрийг хүртвэрээр, хуваарийг хуваариар үржүүлж хураана.<br><b>Бодолт:</b> $-( \\frac{2 \\cdot 9}{3 \\cdot 10} ) = -\\frac{1 \\cdot 3}{1 \\cdot 5} = -\\frac{3}{5} $." 
+            },
+
+            // --- 3-р хэсэг: Зэргийн чанар ба Сөрөг зэрэг ---
+            { 
+                q: "\\( a^m \\cdot a^n \\) илэрхийллийг хялбарчил.", 
+                a: ["\\(a^{m+n} \\)", "\\(a^{m-n} \\)", "\\(a^{m \\cdot n} \\)", "\\( a^m + a^n \\)"], 
+                c: 0, 
+                e: "<b>Зэргийн чанар:</b> Ижил суурьтай зэргүүдийг үржүүлэхэд <b>зэрэг дэвшүүлэгчдийг нэмнэ</b>." 
+            },
+            { 
+                q: "\\( (2x^2)^3 \\) илэрхийллийг зэрэгт дэвшүүл.", 
+                a: ["\\( 6x^6 \\)", "\\( 8x^5 \\)", "\\( 8x^6 \\)", "\\( 2x^6 \\)"], 
+                c: 2, 
+                e: "<b>Дүрэм:</b> Үржигдэхүүн бүрийг зэрэгт дэвшүүлнэ ($(a \\cdot b)^n = a^n \\cdot b^n$) ба зэргийг зэрэгт дэвшүүлэхэд зэргүүдийг үржүүлнэ ($(x^m)^n = x^{m \\cdot n}$).<br><b>Бодолт:</b> $2^3 \\cdot (x^2)^3 = 8 \\cdot x^{2 \\cdot 3} = 8x^6$." 
+            },
+            { 
+                q: "\\(3^{-2} \\) утгыг ол.", 
+                a: ["-9", "9", "1/6", "1/9"], 
+                c: 3, 
+                e: "<b>Дүрэм:</b> Сөрөг зэрэг нь тухайн тооны урвуу утгыг заана: \\(a^{-n} = \\frac{1}{a^n} \\).<br><b>Бодолт:</b> \\(3^{-2} = \\frac{1}{3^2} = \\frac{1}{9} \\)." 
+            },
+            { 
+                q: "\\(\\left(\\frac{1}{2}\\right)^{-3} \\) утгыг ол.", 
+                a: ["1/8", "-8", "8", "1/6"], 
+                c: 2, 
+                e: "<b>Дүрэм:</b> Бутархайн сөрөг зэргийг эерэг болгохын тулд байрыг нь солино: \\( \\left(\\frac{a}{b}\\right)^{-n} = \\left(\\frac{b}{a}\\right)^n \\).<br><b>Бодолт:</b> \\( \\left(\\frac{1}{2}\\right)^{-3} = \\left(\\frac{2}{1}\\right)^3 = 2^3 = 8 \\)." 
+            },
+            { 
+                q: "\\(10^4 \\cdot 10^{-2} \\) илэрхийллийн утга хэд вэ?", 
+                a: ["100", "1000", "10", "0.01"], 
+                c: 0, 
+                e: "<b>Бодолт:</b> \\( 10^{4 + (-2)} = 10^{4 - 2} = 10^2 = 100 \\)." 
+            },
+
+            // --- 4-р хэсэг: Алгебрын илэрхийлэл ба Олон гишүүнт ---
+            { 
+                q: "\\( 3a - 7a + 2a \\) илэрхийллийг хялбарчил.", 
+                a: ["\\( 2a \\)", "\\( -2a \\)", "\\( -12a \\)", "\\( 12a \\)"], 
+                c: 1, 
+                e: "<b>Дүрэм:</b> Ижил төстэй гишүүдийн коэффициентүүдийг бодож, үсгийг хэвээр үлдээнэ.<br><b>Бодолт:</b> \\( (3 - 7 + 2)a = (-4 + 2)a = -2a \\)." 
+            },
+            { 
+                q: "\\(2(x - 3) - 4(x + 1) \\) хаалтыг задарч хялбарчил.", 
+                a: ["\\( -2x - 10 \\)", "\\( -2x - 2 \\)", "\\( 2x - 10 \\)", "\\( -2x + 2 \\)"], 
+                c: 0, 
+                e: "<b>Алхамчилсан бодолт:</b><br>1) Хаалт гишүүнчлэн үржүүлж задна: \\( 2x - 6 - 4x - 4 \\)<br>2) Ижил төстэй гишүүдийг эмхэтгэвэл: \\( (2x - 4x) + (-6 - 4) = -2x - 10 \\)." 
+            },
+            { 
+                q: "\\( (x+y)^2 \\) богино үржүүлэхийн томьёоны задаргааг ол.", 
+                a: ["\\( x^2 + y^2 \\)", "\\( x^2 + xy + y^2 \\)", "\\( x^2 + 2xy + y^2 \\)", "\\( 2x + 2y \\)"], 
+                c: 2, 
+                e: "<b>Нийлбэрийн квадрат:</b> \\( (a+b)^2 = a^2 + 2ab + b^2 \\)<br>Дундын \\( 2xy \\) гишүүнийг орхигдуулж болохгүй." 
+            },
+            { 
+                q: "\\( (a-3)^2 \\) илэрхийллийг задар.", 
+                a: ["\\( a^2 - 9 \\)", "\\( a^2 - 6a + 9 \\)", "\\( a^2 + 6a + 9 \\)", "\\( a^2 - 3a + 9 \\)"], 
+                c: 1, 
+                e: "<b>Ялгаврын квадрат:</b> \\( (a-b)^2 = a^2 - 2ab + b^2 \\)<br><b>Бодолт:</b> \\( a^2 - 2 \\cdot a \\cdot 3 + 3^2 = a^2 - 6a + 9 \\)." 
+            },
+            { 
+                q: "\\( x^2 - 16 \\) квадратуудын ялгаварыг үржигдэхүүн болгон задал.", 
+                a: ["\\( (x-4)^2 \\)", "\\((x-4)(x+4) \\)", "\\((x-8)(x+8) \\)", "\\(x(x-16) \\)"], 
+                c: 1, 
+                e: "<b>Квадратуудын ялгавар:</b> \\(a^2 - b^2 = (a-b)(a+b) \\)<br><b>Бодолт:</b> 16 нь 4-ийн квадрат тул \\(x^2 - 4^2 = (x-4)(x+4) \\)." 
+            },
+            { 
+                q: "\\((x+3)(x-3) \\) үржвэрийг ол.", 
+                a: ["\\( x^2 + 9 \\)", "\\( x^2 - 9 \\)", "\\( x^2 - 6x + 9 \\)", "\\( x^2 - 6 \\)"], 
+                c: 1, 
+                e: "<b>Богино үржүүлэхийн томьёо:</b> \\( (a+b)(a-b) = a^2 - b^2 \\)<br><b>Бодолт:</b> \\( x^2 - 3^2 = x^2 - 9 \\)." 
+            },
+            { 
+                q: "\\( x^2 + 5x + 6 \\) олон гишүүнтийг үржигдэхүүн болгон задал.", 
+                a: ["\\((x+1)(x+6) \\)", "\\((x+2)(x+3) \\)", "\\((x-2)(x-3) \\)", "\\((x+5)(x+1) \\)"], 
+                c: 1, 
+                e: "<b>Задардаг олон гишүүнт:</b> Үржвэр нь 6, нэмэхэд 5 гарах тоонууд нь <b>2 ба 3</b> юм. Иймд \\((x+2)(x+3) \\) болно." 
+            },
+            { 
+                q: "Алгебрын бутархай \\(\\frac{x}{2} + \\frac{x}{3} \\) илэрхийллийг эмхэтгэ.", 
+                a: ["\\(\\frac{2x}{5} \\)", "\\(\\frac{5x}{6} \\)", "\\(\\frac{x}{6} \\)", "\\(\\frac{5x}{5} \\)"], 
+                c: 1, 
+                e: "<b>Бодолт:</b> Энгийн бутархайтай ижил зарчмаар ерөнхий хуваарь өгнө. 2 ба 3-ын БЕХ нь 6 тул:<br>\\(\\frac{3x}{6} + \\frac{2x}{6} = \\frac{5x}{6} \\) болно." 
+            }
+        ];
+
+        let quiz, currentIdx, score, userChoices, userName, userClass, timer;
+        let timeRemaining = 20 * 60; // 20 минут
+
+        function reRenderMath() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function startQuiz() {
+            userName = document.getElementById('input-name').value.trim();
+            userClass = document.getElementById('input-class').value.trim();
+            if(!userName || !userClass) return alert("Анги болон нэрээ оруулна уу.");
+
+            // Асуултуудыг сэлгэхгүйгээр байгаа дарааллаар нь авна
+            quiz = [...QUESTIONS];
+            currentIdx = 0; score = 0; userChoices = [];
+            
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('info-display').innerText = `${userClass} | ${userName}`;
+            
+            loadQuestion();
+            runTimer();
+        }
+
+        function runTimer() {
+            timer = setInterval(() => {
+                timeRemaining--;
+                let m = Math.floor(timeRemaining / 60);
+                let s = timeRemaining % 60;
+                document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if(timeRemaining <= 0) endQuiz();
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const data = quiz[currentIdx];
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('q-progress').innerText = `Асуулт ${currentIdx + 1} / ${quiz.length}`;
+            document.getElementById('q-text').innerHTML = data.q;
+            
+            const optBox = document.getElementById('options');
+            optBox.innerHTML = '';
+            data.a.forEach((txt, i) => {
+                const d = document.createElement('div');
+                d.className = "option-item";
+                d.innerHTML = txt;
+                d.onclick = () => selectOption(i, d);
+                optBox.appendChild(d);
+            });
+
+            reRenderMath();
+        }
+
+        function selectOption(idx, el) {
+            const data = quiz[currentIdx];
+            const isCorrect = idx === data.c;
+            
+            userChoices.push({ 
+                id: currentIdx + 1,
+                q: data.q, 
+                correct: isCorrect, 
+                user: data.a[idx], 
+                correctAns: data.a[data.c], 
+                expl: data.e 
+            });
+            
+            document.querySelectorAll('.option-item').forEach(b => b.classList.add('disabled'));
+            if(isCorrect) { 
+                el.classList.add('correct'); 
+                score++; 
+            } else { 
+                el.classList.add('wrong'); 
+                document.querySelectorAll('.option-item')[data.c].classList.add('correct'); 
+            }
+            
+            const statusTitle = isCorrect 
+                ? `<span class="text-emerald-600 font-bold block mb-1">ЗӨВ ХАРИУЛЛАА! 🎉</span>` 
+                : `<span class="text-rose-600 font-bold block mb-1">БУРУУ ХАРИУЛЛАА! ❌</span>`;
+            
+            document.getElementById('expl-text').innerHTML = `${statusTitle} ${data.e}`;
+            document.getElementById('feedback').classList.remove('hidden');
+            
+            reRenderMath();
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if(currentIdx < quiz.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            const p = Math.round((score / quiz.length) * 100);
+            document.getElementById('res-percent').innerText = p + "%";
+            document.getElementById('result-meta').innerText = `${userName} (${userClass}), та ${quiz.length} асуултаас ${score}-ыг зөв хариуллаа.`;
+        }
+
+        async function sendFinalEmail() {
+            const btn = document.getElementById('send-btn');
+            const SERVICE_ID = "service_qxln57f"; 
+            const TEMPLATE_ID = "template_mergd09"; 
+
+            btn.disabled = true;
+            btn.innerText = "ИЛГЭЭЖ БАЙНА...";
+
+            const wrongQuestions = userChoices
+                .filter(item => !item.correct)
+                .map(item => item.id)
+                .join(', ');
+
+            const percentage = Math.round((score / quiz.length) * 100);
+            const resultSummary = `Нийт оноо: ${score}/${quiz.length} (${percentage}%)\nАлдсан даалгаврын дугаарууд: ${wrongQuestions || 'Бүгд зөв'}`;
+
+            const templateParams = {
+                from_name: userName,
+                name: userName,
+                student_class: userClass,
+                message: resultSummary
+            };
+
+            try {
+                await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+                
+                document.getElementById('action-section').style.display = 'none';
+                document.getElementById('email-status').classList.remove('hidden');
+                
+                showReviewAfterSubmission();
+                
+            } catch (err) {
+                console.error("EmailJS Error:", err);
+                alert("Илгээхэд алдаа гарлаа. Та дахин оролдоно уу.");
+                btn.disabled = false;
+                btn.innerText = "ДАХИН ИЛГЭЭХ";
+            }
+        }
+
+        function showReviewAfterSubmission() {
+            const reviewContainer = document.getElementById('post-submission-review');
+            const list = document.getElementById('review-list');
+            
+            reviewContainer.classList.remove('hidden');
+            list.innerHTML = userChoices.map((item, i) => `
+                <div class="p-4 rounded-xl border ${item.correct ? 'border-emerald-100 bg-emerald-50' : 'border-rose-100 bg-rose-50'} shadow-sm">
+                    <div class="font-bold text-sm mb-2 text-slate-700">${i+1}. ${item.q}</div>
+                    <div class="flex items-center gap-2 text-xs mb-2">
+                        <span class="px-2 py-0.5 rounded-full ${item.correct ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'} font-bold">
+                            ${item.correct ? 'ЗӨВ' : 'БУРУУ'}
+                        </span>
+                        ${!item.correct ? `<span class="text-slate-500">Зөв хариулт: <span class="text-emerald-600 font-bold">${item.correctAns}</span></span>` : ''}
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white/70 p-3 rounded-lg border border-slate-100 leading-relaxed">
+                        ${item.expl}
+                    </div>
+                </div>
+            `).join('');
+            
+            reRenderMath();
+            reviewContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</body>
+</html>
