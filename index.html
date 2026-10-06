@@ -6,19 +6,26 @@
     <title>Математикийн Сорил - Олон гишүүнт ба Суурь чадвар</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- MathJax 3 Тохиргоо ба Скрипт -->
     <script>
-        // Таны Public Key
-        (function() { emailjs.init("YprKOWjuKoWJYmpsn"); })(); 
-        
         window.MathJax = {
             tex: { 
-                inlineMath: [['\\(', '\\)'], ['$' , '$']], 
-                displayMath: [['\\[', '\\]'], ['$$' , '$$']],
+                inlineMath: [['\\(', '\\)'], ['$', '$']], 
+                displayMath: [['\\[', '\\]'], ['$$', '$$']]
             },
-            options: { enableMenu: false }
+            options: { 
+                enableMenu: false 
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
@@ -28,6 +35,10 @@
         .correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; color: #166534; }
         .wrong { border-color: #f43f5e !important; background-color: #fef2f2 !important; color: #991b1b; }
         .disabled { cursor: default; pointer-events: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -95,6 +106,8 @@
     </div>
 
     <script>
+        (function() { emailjs.init("YprKOWjuKoWJYmpsn"); })(); 
+
         const QUESTIONS = [
             // --- 1-р хэсэг: Эерэг, сөрөг тооны үйлдлүүд (Суурь) ---
             { 
@@ -110,36 +123,36 @@
                 e: "<b>Дүрэм:</b> Ижил сөрөг тэмдэгтэй тоонуудыг нэмэхдээ тоонуудыг нь нэмээд урд нь хасах (-) тэмдэг тавина.<br><b>Бодолт:</b> $-(5 + 9) = -14$ болно." 
             },
             { 
-                q: "\\( (-4) \\cdot (-7) \\) үржвэрийг ол.", 
+                q: "\\((-4) \\cdot (-7) \\) үржвэрийг ол.", 
                 a: ["-28", "28", "-11", "11"], 
                 c: 1, 
-                e: "<b>Дүрэм:</b> Хоёр сөрөг тоог үржүүлэх эсвэл хуваахад хасах тэмдгүүд бие биенээ саармагжуулж <b>эерэг (+)</b> тоо гарна.<br><b>Бодолт:</b> $ (-) \\cdot (-) = (+) $ тул $ 4 \\cdot 7 = 28 $ болно." 
+                e: "<b>Дүрэм:</b> Хоёр сөрөг тоог үржүүлэх эсвэл хуваахад хасах тэмдгүүд бие биенээ саармагжуулж <b>эерэг (+)</b> тоо гарна.<br><b>Бодолт:</b> $(-) \\cdot (-) = (+)$ тул $4 \\cdot 7 = 28$ болно." 
             },
             { 
-                q: "\\( -18 : 3 + (-2) \\) үйлдлийг гүйцэтгэ.", 
+                q: "\\(-18 : 3 + (-2) \\) үйлдлийг гүйцэтгэ.", 
                 a: ["-8", "-4", "4", "8"], 
                 c: 0, 
-                e: "<b>Үйдлийн дараалал:</b> Эхлээд хуваах, дараа нь нэмэх үйлдэл хийнэ.<br>1) $ -18 : 3 = -6 $<br>2) $ -6 + (-2) = -8 $." 
+                e: "<b>Үйдлийн дараалал:</b> Эхлээд хуваах, дараа нь нэмэх үйлдэл хийнэ.<br>1) $-18 : 3 = -6$<br>2) $-6 + (-2) = -8$." 
             },
 
             // --- 2-р хэсэг: Энгийн ба аравтын бутархай (Суурь) ---
             { 
-                q: "\\( \\frac{2}{5} + \\frac{1}{3} \\) нийлбэрийг ол.", 
-                a: ["\\( \\frac{3}{8} \\)", "\\( \\frac{11}{15} \\)", "\\( \\frac{2}{15} \\)", "\\( \\frac{7}{15} \\)"], 
+                q: "\\(\\frac{2}{5} + \\frac{1}{3} \\) нийлбэрийг ол.", 
+                a: ["\\(\\frac{3}{8} \\)", "\\(\\frac{11}{15} \\)", "\\(\\frac{2}{15} \\)", "\\(\\frac{7}{15} \\)"], 
                 c: 1, 
-                e: "<b>Дүрэм:</b> Энгийн бутархайг нэмэхийн тулд заавал ерөнхий хуваарьтай болгоно (5 ба 3-ын БЕХ нь 15).<br><b>Бодолт:</b> \\( \\frac{2 \\cdot 3}{15} + \\frac{1 \\cdot 5}{15} = \\frac{6 + 5}{15} = \\frac{11}{15} \\) болно." 
+                e: "<b>Дүрэм:</b> Энгийн бутархайг нэмэхийн тулд заавал ерөнхий хуваарьтай болгоно (5 ба 3-ын БЕХ нь 15).<br><b>Бодолт:</b> \\(\\frac{2 \\cdot 3}{15} + \\frac{1 \\cdot 5}{15} = \\frac{6 + 5}{15} = \\frac{11}{15} \\) болно." 
             },
             { 
-                q: "\\( \\frac{3}{4} - \\frac{5}{6} \\) ялгаврыг ол.", 
-                a: ["\\( -\\frac{1}{12} \\)", "\\( \\frac{1}{12} \\)", "\\( -\\frac{2}{2} \\)", "\\( \\frac{1}{2} \\)"], 
+                q: "\\(\\frac{3}{4} - \\frac{5}{6} \\) ялгаврыг ол.", 
+                a: ["\\(-\\frac{1}{12} \\)", "\\(\\frac{1}{12} \\)", "\\(-\\frac{2}{2} \\)", "\\(\\frac{1}{2} \\)"], 
                 c: 0, 
-                e: "<b>Бодолт:</b> 4 ба 6-ын ерөнхий хуваарь нь 12 юм.<br>\\( \\frac{9}{12} - \\frac{10}{12} = \\frac{9 - 10}{12} = -\\frac{1}{12} \\) болно." 
+                e: "<b>Бодолт:</b> 4 ба 6-ын ерөнхий хуваарь нь 12 юм.<br>\\(\\frac{9}{12} - \\frac{10}{12} = \\frac{9 - 10}{12} = -\\frac{1}{12} \\) болно." 
             },
             { 
-                q: "\\( \\left(-\\frac{2}{3}\\right) \\cdot \\frac{9}{10} \\) үржвэрийг хялбарчил.", 
-                a: ["\\( -\\frac{3}{5} \\)", "\\( \\frac{3}{5} \\)", "\\( -\\frac{18}{30} \\)", "\\( -\\frac{5}{3} \\)"], 
+                q: "\\(\\left(-\\frac{2}{3}\\right) \\cdot \\frac{9}{10} \\) үржвэрийг хялбарчил.", 
+                a: ["\\(-\\frac{3}{5} \\)", "\\(\\frac{3}{5} \\)", "\\(-\\frac{18}{30} \\)", "\\(-\\frac{5}{3} \\)"], 
                 c: 0, 
-                e: "<b>Дүрэм:</b> Бутархайг үржүүлэхдээ хүртвэрийг хүртвэрээр, хуваарийг хуваариар үржүүлж хураана.<br><b>Бодолт:</b> $-( \\frac{2 \\cdot 9}{3 \\cdot 10} ) = -\\frac{1 \\cdot 3}{1 \\cdot 5} = -\\frac{3}{5} $." 
+                e: "<b>Дүрэм:</b> Бутархайг үржүүлэхдээ хүртвэрийг хүртвэрээр, хуваарийг хуваариар үржүүлж хураана.<br><b>Бодолт:</b> $-( \\frac{2 \\cdot 9}{3 \\cdot 10} ) = -\\frac{1 \\cdot 3}{1 \\cdot 5} = -\\frac{3}{5}$." 
             },
 
             // --- 3-р хэсэг: Зэргийн чанар ба Сөрөг зэрэг ---
@@ -197,208 +210,4 @@
                 q: "\\( (a-3)^2 \\) илэрхийллийг задар.", 
                 a: ["\\( a^2 - 9 \\)", "\\( a^2 - 6a + 9 \\)", "\\( a^2 + 6a + 9 \\)", "\\( a^2 - 3a + 9 \\)"], 
                 c: 1, 
-                e: "<b>Ялгаврын квадрат:</b> \\( (a-b)^2 = a^2 - 2ab + b^2 \\)<br><b>Бодолт:</b> \\( a^2 - 2 \\cdot a \\cdot 3 + 3^2 = a^2 - 6a + 9 \\)." 
-            },
-            { 
-                q: "\\( x^2 - 16 \\) квадратуудын ялгаварыг үржигдэхүүн болгон задал.", 
-                a: ["\\( (x-4)^2 \\)", "\\((x-4)(x+4) \\)", "\\((x-8)(x+8) \\)", "\\(x(x-16) \\)"], 
-                c: 1, 
-                e: "<b>Квадратуудын ялгавар:</b> \\(a^2 - b^2 = (a-b)(a+b) \\)<br><b>Бодолт:</b> 16 нь 4-ийн квадрат тул \\(x^2 - 4^2 = (x-4)(x+4) \\)." 
-            },
-            { 
-                q: "\\((x+3)(x-3) \\) үржвэрийг ол.", 
-                a: ["\\( x^2 + 9 \\)", "\\( x^2 - 9 \\)", "\\( x^2 - 6x + 9 \\)", "\\( x^2 - 6 \\)"], 
-                c: 1, 
-                e: "<b>Богино үржүүлэхийн томьёо:</b> \\( (a+b)(a-b) = a^2 - b^2 \\)<br><b>Бодолт:</b> \\( x^2 - 3^2 = x^2 - 9 \\)." 
-            },
-            { 
-                q: "\\( x^2 + 5x + 6 \\) олон гишүүнтийг үржигдэхүүн болгон задал.", 
-                a: ["\\((x+1)(x+6) \\)", "\\((x+2)(x+3) \\)", "\\((x-2)(x-3) \\)", "\\((x+5)(x+1) \\)"], 
-                c: 1, 
-                e: "<b>Задардаг олон гишүүнт:</b> Үржвэр нь 6, нэмэхэд 5 гарах тоонууд нь <b>2 ба 3</b> юм. Иймд \\((x+2)(x+3) \\) болно." 
-            },
-            { 
-                q: "Алгебрын бутархай \\(\\frac{x}{2} + \\frac{x}{3} \\) илэрхийллийг эмхэтгэ.", 
-                a: ["\\(\\frac{2x}{5} \\)", "\\(\\frac{5x}{6} \\)", "\\(\\frac{x}{6} \\)", "\\(\\frac{5x}{5} \\)"], 
-                c: 1, 
-                e: "<b>Бодолт:</b> Энгийн бутархайтай ижил зарчмаар ерөнхий хуваарь өгнө. 2 ба 3-ын БЕХ нь 6 тул:<br>\\(\\frac{3x}{6} + \\frac{2x}{6} = \\frac{5x}{6} \\) болно." 
-            }
-        ];
-
-        let quiz, currentIdx, score, userChoices, userName, userClass, timer;
-        let timeRemaining = 20 * 60; // 20 минут
-
-        function reRenderMath() {
-            if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise();
-            }
-        }
-
-        function startQuiz() {
-            userName = document.getElementById('input-name').value.trim();
-            userClass = document.getElementById('input-class').value.trim();
-            if(!userName || !userClass) return alert("Анги болон нэрээ оруулна уу.");
-
-            // Асуултуудыг сэлгэхгүйгээр байгаа дарааллаар нь авна
-            quiz = [...QUESTIONS];
-            currentIdx = 0; score = 0; userChoices = [];
-            
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('info-display').innerText = `${userClass} | ${userName}`;
-            
-            loadQuestion();
-            runTimer();
-        }
-
-        function runTimer() {
-            timer = setInterval(() => {
-                timeRemaining--;
-                let m = Math.floor(timeRemaining / 60);
-                let s = timeRemaining % 60;
-                document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if(timeRemaining <= 0) endQuiz();
-            }, 1000);
-        }
-
-        function loadQuestion() {
-            const data = quiz[currentIdx];
-            document.getElementById('feedback').classList.add('hidden');
-            document.getElementById('q-progress').innerText = `Асуулт ${currentIdx + 1} / ${quiz.length}`;
-            document.getElementById('q-text').innerHTML = data.q;
-            
-            const optBox = document.getElementById('options');
-            optBox.innerHTML = '';
-            data.a.forEach((txt, i) => {
-                const d = document.createElement('div');
-                d.className = "option-item";
-                d.innerHTML = txt;
-                d.onclick = () => selectOption(i, d);
-                optBox.appendChild(d);
-            });
-
-            reRenderMath();
-        }
-
-        function selectOption(idx, el) {
-            const data = quiz[currentIdx];
-            const isCorrect = idx === data.c;
-            
-            userChoices.push({ 
-                id: currentIdx + 1,
-                q: data.q, 
-                correct: isCorrect, 
-                user: data.a[idx], 
-                correctAns: data.a[data.c], 
-                expl: data.e 
-            });
-            
-            document.querySelectorAll('.option-item').forEach(b => b.classList.add('disabled'));
-            if(isCorrect) { 
-                el.classList.add('correct'); 
-                score++; 
-            } else { 
-                el.classList.add('wrong'); 
-                document.querySelectorAll('.option-item')[data.c].classList.add('correct'); 
-            }
-            
-            const statusTitle = isCorrect 
-                ? `<span class="text-emerald-600 font-bold block mb-1">ЗӨВ ХАРИУЛЛАА! 🎉</span>` 
-                : `<span class="text-rose-600 font-bold block mb-1">БУРУУ ХАРИУЛЛАА! ❌</span>`;
-            
-            document.getElementById('expl-text').innerHTML = `${statusTitle} ${data.e}`;
-            document.getElementById('feedback').classList.remove('hidden');
-            
-            reRenderMath();
-        }
-
-        function nextQuestion() {
-            currentIdx++;
-            if(currentIdx < quiz.length) {
-                loadQuestion();
-            } else {
-                endQuiz();
-            }
-        }
-
-        function endQuiz() {
-            clearInterval(timer);
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            const p = Math.round((score / quiz.length) * 100);
-            document.getElementById('res-percent').innerText = p + "%";
-            document.getElementById('result-meta').innerText = `${userName} (${userClass}), та ${quiz.length} асуултаас ${score}-ыг зөв хариуллаа.`;
-        }
-
-        async function sendFinalEmail() {
-            const btn = document.getElementById('send-btn');
-            const SERVICE_ID = "service_qxln57f"; 
-            const TEMPLATE_ID = "template_mergd09"; 
-
-            btn.disabled = true;
-            btn.innerText = "ИЛГЭЭЖ БАЙНА...";
-
-            const wrongQuestions = userChoices
-                .filter(item => !item.correct)
-                .map(item => item.id)
-                .join(', ');
-
-            const percentage = Math.round((score / quiz.length) * 100);
-            const resultSummary = `Нийт оноо: ${score}/${quiz.length} (${percentage}%)\nАлдсан даалгаврын дугаарууд: ${wrongQuestions || 'Бүгд зөв'}`;
-
-            const templateParams = {
-                from_name: userName,
-                name: userName,
-                student_class: userClass,
-                message: resultSummary
-            };
-
-            try {
-                await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
-                
-                document.getElementById('action-section').style.display = 'none';
-                document.getElementById('email-status').classList.remove('hidden');
-                
-                showReviewAfterSubmission();
-                
-            } catch (err) {
-                console.error("EmailJS Error:", err);
-                alert("Илгээхэд алдаа гарлаа. Та дахин оролдоно уу.");
-                btn.disabled = false;
-                btn.innerText = "ДАХИН ИЛГЭЭХ";
-            }
-        }
-
-        function showReviewAfterSubmission() {
-            const reviewContainer = document.getElementById('post-submission-review');
-            const list = document.getElementById('review-list');
-            
-            reviewContainer.classList.remove('hidden');
-            list.innerHTML = userChoices.map((item, i) => `
-                <div class="p-4 rounded-xl border ${item.correct ? 'border-emerald-100 bg-emerald-50' : 'border-rose-100 bg-rose-50'} shadow-sm">
-                    <div class="font-bold text-sm mb-2 text-slate-700">${i+1}. ${item.q}</div>
-                    <div class="flex items-center gap-2 text-xs mb-2">
-                        <span class="px-2 py-0.5 rounded-full ${item.correct ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'} font-bold">
-                            ${item.correct ? 'ЗӨВ' : 'БУРУУ'}
-                        </span>
-                        ${!item.correct ? `<span class="text-slate-500">Зөв хариулт: <span class="text-emerald-600 font-bold">${item.correctAns}</span></span>` : ''}
-                    </div>
-                    <div class="text-xs text-slate-600 bg-white/70 p-3 rounded-lg border border-slate-100 leading-relaxed">
-                        ${item.expl}
-                    </div>
-                </div>
-            `).join('');
-            
-            reRenderMath();
-            reviewContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
-
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-</body>
-</html>
+                e: "<b>Ялгаврын квадрат:</b> \\( (a-b)^2 = a^2 - 2ab + b^2 \\
